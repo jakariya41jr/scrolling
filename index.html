@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>JRS HeartWave Scroll · Ultimate Edition</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inter:wght@400;500;600&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- html2canvas -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg-start: #1a0f1c;
+      --bg-end: #0b050e;
+      --panel-bg: rgba(30, 18, 26, 0.75);
+      --panel-border: rgba(255, 145, 175, 0.4);
+      --accent: #ffb7c5;
+      --button-bg: #b55b7a;
+      --button-hover: #cf7a9b;
+    }
+
+    body {
+      background: radial-gradient(circle at 30% 10%, var(--bg-start), var(--bg-end));
+      color: #f2dfe6;
+      font-family: 'Poppins', 'Courier New', monospace;
+      font-size: 15px;
+      padding: 2rem 1.5rem 3rem;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+      transition: background 0.3s ease;
+    }
+
+    body::before {
+      content: "❤️";
+      position: fixed;
+      bottom: 10%;
+      left: -5%;
+      font-size: 100px;
+      opacity: 0.03;
+      pointer-events: none;
+      transform: rotate(-15deg);
+      z-index: 0;
+    }
+    body::after {
+      content: "💔";
+      position: fixed;
+      top: 20%;
+      right: -3%;
+      font-size: 130px;
+      opacity: 0.03;
+      pointer-events: none;
+      transform: rotate(10deg);
+      z-index: 0;
+    }
+
+    .wrapper {
+      max-width: 1400px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+
+    .top-dev-bar {
+      background: var(--panel-bg);
+      backdrop-filter: blur(10px);
+      border-radius: 60px;
+      padding: 8px 24px;
+      margin-bottom: 1.5rem;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      border: 1px solid var(--panel-border);
+      font-size: 0.85rem;
+    }
+    .top-dev-bar .dev-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-left: auto;
+    }
+    .top-dev-bar span { color: #ffcddf; }
+    .top-contact {
+      background: var(--button-bg);
+      padding: 5px 16px;
+      border-radius: 40px;
+      text-decoration: none;
+      color: white;
+      font-weight: bold;
+      transition: 0.2s;
+      font-size: 0.75rem;
+    }
+    .top-contact:hover { background: var(--button-hover); transform: scale(0.96); }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 2rem;
+      animation: fadeGlow 3s infinite alternate;
+    }
+    @keyframes fadeGlow {
+      0% { text-shadow: 0 0 2px #ffb7c5; }
+      100% { text-shadow: 0 0 12px #ff6f91; }
+    }
+    .hero h1 {
+      font-family: 'Poppins', 'Playfair Display', serif;
+      font-size: 2.5rem;
+      background: linear-gradient(135deg, #ffb7c5, #ff9eb5, #e38b9e);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .hero p {
+      color: #d9b0c0;
+      font-size: 0.85rem;
+      border-bottom: 1px dashed #c97e96;
+      display: inline-block;
+      padding-bottom: 6px;
+      font-style: italic;
+    }
+
+    .guide-card {
+      background: rgba(25, 15, 22, 0.8);
+      backdrop-filter: blur(6px);
+      border-radius: 1.5rem;
+      padding: 1.2rem 1.8rem;
+      margin-bottom: 2rem;
+      border: 1px solid #b87393;
+    }
+    .guide-title {
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: #ffc0d0;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .guide-steps {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.2rem;
+      justify-content: space-between;
+    }
+    .step {
+      flex: 1;
+      min-width: 170px;
+      background: rgba(0,0,0,0.3);
+      border-radius: 1rem;
+      padding: 10px 14px;
+      font-size: 0.85rem;
+      line-height: 1.4;
+    }
+    .step strong {
+      color: #ffb3c6;
+      display: block;
+      margin-bottom: 5px;
+      font-size: 0.9rem;
+    }
+    @media (max-width: 700px) { .guide-steps { flex-direction: column; } }
+
+    .control-panel {
+      background: var(--panel-bg);
+      backdrop-filter: blur(12px);
+      border-radius: 2rem;
+      padding: 1.4rem 2rem;
+      margin-bottom: 2.2rem;
+      border: 1px solid var(--panel-border);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.5), 0 0 8px rgba(255, 120, 160, 0.3);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      gap: 1.2rem;
+      justify-content: space-between;
+    }
+
+    .input-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: flex-end;
+      flex: 3;
+    }
+    .input-field {
+      flex: 2;
+      min-width: 200px;
+    }
+    .input-field label {
+      display: block;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #ffbfd0;
+      margin-bottom: 6px;
+    }
+    .input-field input {
+      width: 100%;
+      background: #2a1a24;
+      border: 1px solid #d47a99;
+      padding: 12px 16px;
+      border-radius: 60px;
+      color: #ffeef4;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+    .input-field input:focus {
+      outline: none;
+      border-color: #ff99bb;
+      box-shadow: 0 0 12px #ff90b0;
+      background: #2f1f2a;
+    }
+    button {
+      background: var(--button-bg);
+      border: none;
+      padding: 12px 26px;
+      border-radius: 60px;
+      font-weight: bold;
+      font-family: 'Segoe UI', monospace;
+      color: white;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: 0.2s ease;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+      letter-spacing: 1px;
+    }
+    button:hover {
+      background: var(--button-hover);
+      transform: scale(0.97);
+      box-shadow: 0 0 14px #ffa5c2;
+    }
+    .settings {
+      display: flex;
+      gap: 0.8rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .style-select, .duration-box, .lines-box, .intensity-box {
+      background: #261a21;
+      padding: 6px 16px;
+      border-radius: 50px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border: 1px solid #b46f8a;
+    }
+    .style-select select, .duration-box input, .lines-box input, .intensity-box input {
+      background: #2f1f2a;
+      border: 1px solid #d47a99;
+      padding: 6px 12px;
+      border-radius: 30px;
+      color: #ffeef4;
+      font-family: monospace;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+    .duration-box input, .lines-box input, .intensity-box input {
+      width: 75px;
+      text-align: center;
+    }
+    .lines-box input { width: 80px; }
+    .lines-box small, .intensity-box small {
+      font-size: 0.65rem;
+      color: #ffb0c0;
+    }
+    .copy-btn { background: #73556b; box-shadow: none; }
+    .copy-btn:hover { background: #92738b; }
+
+    .output-container {
+      background: #0b050b;
+      border-radius: 2rem;
+      padding: 1.8rem 1.2rem;
+      border: 1px solid #b87393;
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.7), 0 10px 20px rgba(0,0,0,0.3), 0 0 10px rgba(255, 110, 140, 0.2);
+      overflow-x: auto;
+    }
+    #scrollingTextOutput {
+      white-space: pre;
+      font-family: 'Fira Code', 'Courier New', monospace;
+      font-size: 14px;
+      line-height: 1.4;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    #scrollingTextOutput div {
+      white-space: pre;
+      transition: all 0.05s ease;
+    }
+    .bottom-anchor { height: 2px; opacity: 0; pointer-events: none; }
+    .footer-note {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1.8rem;
+      font-size: 0.8rem;
+      color: #be8ea2;
+      flex-wrap: wrap;
+      gap: 1rem;
+      border-top: 1px dashed #b96f8c;
+      padding-top: 1rem;
+    }
+    .badge {
+      background: #1f131b;
+      padding: 4px 12px;
+      border-radius: 30px;
+      font-size: 0.7rem;
+      color: #ffbfcf;
+    }
+    @media (max-width: 880px) {
+      .settings { gap: 0.6rem; }
+      .lines-box, .duration-box, .style-select, .intensity-box { padding: 4px 12px; }
+    }
+    @media (max-width: 780px) {
+      body { padding: 1rem; }
+      .control-panel { flex-direction: column; align-items: stretch; }
+      .settings { justify-content: flex-start; }
+      .footer-note { flex-direction: column; align-items: flex-start; }
+      .top-dev-bar { justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+<div class="wrapper">
+  <div class="top-dev-bar">
+    <div class="dev-info">
+      <span>👨‍💻 Md Jakariya Hasan</span>
+      <a href="http://jakariya41jr.pro.bd/" target="_blank" rel="noopener noreferrer" class="top-contact">📧 CONTACT</a>
+    </div>
+  </div>
+
+  <div class="hero">
+    <h1>💗 JRS HeartWave Scroll 💗</h1>
+    <p>✦ where letters drift like forgotten promises ✦</p>
+  </div>
+
+  <div class="guide-card">
+    <div class="guide-title"><span>📖</span> কীভাবে ব্যবহার করবেন? / How to Use</div>
+    <div class="guide-steps">
+      <div class="step"><strong>✏️ ১. লিখুন আপনার মেসেজ</strong>খালি রাখলে ডিফল্ট "jakariya41jr" দেখাবে</div>
+      <div class="step"><strong>🎨 ২. থিম, ফন্ট, স্টাইল বেছে নিন</strong>এবং "Wave Intensity" স্লাইডার দিয়ে আঁকাবাঁকা কন্ট্রোল করুন</div>
+      <div class="step"><strong>📏 ৩. লাইনের সংখ্যা দিন</strong>ডিফল্ট ৩০ (মেসেঞ্জার/হোয়াটসঅ্যাপের জন্য উপযুক্ত)</div>
+      <div class="step"><strong>⚡ ৪. ক্লিক করুন "Generate!"</strong>আপনার লেখা নাচতে শুরু করবে</div>
+      <div class="step"><strong>🎵 ৫. মিউজিক চালু করুন</strong>পটভূমিতে লোফি গান বাজবে</div>
+      <div class="step"><strong>📸 ৬. ইমেজ সেভ / কপি</strong>PNG হিসাবে সংরক্ষণ বা টেক্সট কপি করুন</div>
+    </div>
+  </div>
+
+  <div class="control-panel">
+    <div class="input-group">
+      <div class="input-field">
+        <label>✎ YOUR HEART'S MESSAGE</label>
+        <input type="text" id="userText" value="" placeholder="যেমন: আমি তোমায় ভালোবাসি...">
+      </div>
+      <button id="generateBtn">💔 GENERATE / AGAIN! 💔</button>
+    </div>
+    <div class="settings">
+      <div class="style-select"><span>🎨 THEME</span><select id="themeSelect"><option value="rose">🌹 Rose Petal</option><option value="sea">🌊 Deep Sea</option><option value="cyber">💜 Cyberpunk</option><option value="forest">🌿 Forest Mist</option></select></div>
+      <div class="style-select"><span>✍️ FONT</span><select id="fontSelect"><option value="cursive">Bold Poppins</option><option value="sans">Clean Inter</option></select></div>
+      <div class="style-select"><span>🌀 STYLE</span><select id="styleSelect">
+        <option value="wave">🌊 Wave</option>
+        <option value="heartbeat">💓 Heartbeat Pulse</option>
+        <option value="waveburst">⚡ Wave Burst</option>
+        <option value="glow">✨ Glow Wave</option>
+        <option value="stutter">🎬 Stutter</option>
+        <option value="zoom">📏 Zoom</option>
+        <option value="fadedrift">🌫️ Fade Drift</option>
+        <option value="spiral">🌀 Spiral</option>
+        <option value="drift">🌙 Drifting</option>
+        <option value="bounce">⚡ Bounce</option>
+        <option value="sway">🍃 Sway</option>
+        <option value="glitch">📺 Glitch</option>
+        <option value="expand">📈 Expand/Contract</option>
+        <option value="random">🎲 Random Drift</option>
+      </select></div>
+      <div class="intensity-box"><span>📊 Wave Intensity</span><input type="number" id="intensity" min="0" max="40" value="18" step="1"><small>(0=none, 40=wild)</small></div>
+      <div class="lines-box"><label>📏 LINES</label><input type="number" id="lineCount" min="5" max="600" value="30" step="1"><small>(max 600)</small></div>
+      <button id="musicToggleBtn" style="background:#4a4a6a">🎵 PLAY MUSIC</button>
+      <button id="copyOutputBtn" class="copy-btn">📋 COPY TEXT</button>
+      <button id="exportImageBtn" class="copy-btn">📸 SAVE PNG</button>
+    </div>
+  </div>
+
+  <div class="output-container">
+    <div id="scrollingTextOutput"><div style="color:#ffb7c5;">✨ weaving heartbeats into text waves... ✨</div></div>
+  </div>
+  <div id="theBottom" class="bottom-anchor"></div>
+  <div class="footer-note"><div class="badge">💘 প্রতিটি লাইন = অনন্য রঙ + নির্বাচিত স্টাইল + Wave Intensity | সর্বোচ্চ ৬০০ লাইন | 🎵 ব্যাকগ্রাউন্ড মিউজিক</div></div>
+</div>
+
+<audio id="bgMusic" loop preload="auto"><source src="https://github.com/jakariya41yt-cyber/song/raw/66aa61377b30ed727e526f47de38914696924827/GhorGari%20Lofi-%20Highway%20_%20%E0%A6%98%E0%A7%8B%E0%A6%B0%E0%A6%97%E0%A6%BE%E0%A6%A1%E0%A6%BC%E0%A7%80%20_%20Lofi%20Remix%20_%20Lyrical%20Video(M4A_128K).m4a" type="audio/mp4"></audio>
+<div id="emojiRain" style="position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0; overflow:hidden;"></div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+(function() {
+  // -------------------- BACKGROUND MUSIC --------------------
+  const audio = document.getElementById("bgMusic");
+  const musicBtn = document.getElementById("musicToggleBtn");
+  let musicPlaying = false;
+  function toggleMusic() {
+    if (musicPlaying) { audio.pause(); musicBtn.textContent = "🎵 PLAY MUSIC"; }
+    else { audio.play().catch(e=>console.log("Auto-play blocked")); musicBtn.textContent = "🔊 MUSIC ON"; }
+    musicPlaying = !musicPlaying;
+  }
+  musicBtn.addEventListener("click", toggleMusic);
+
+  // -------------------- THEMES --------------------
+  const themeColors = {
+    rose: { bgStart:"#1a0f1c", bgEnd:"#0b050e", panelBg:"rgba(30,18,26,0.75)", panelBorder:"rgba(255,145,175,0.4)", accent:"#ffb7c5", buttonBg:"#b55b7a", buttonHover:"#cf7a9b", hueRange:{min:330,max:400,shift:0.85}, satBase:70, satVar:18, lightBase:62, lightVar:12 },
+    sea: { bgStart:"#0a1f2a", bgEnd:"#031018", panelBg:"rgba(10,30,40,0.75)", panelBorder:"rgba(80,200,200,0.4)", accent:"#7fd1d1", buttonBg:"#2c7a7a", buttonHover:"#4c9e9e", hueRange:{min:170,max:210,shift:0.85}, satBase:65, satVar:20, lightBase:55, lightVar:15 },
+    cyber: { bgStart:"#1a0a2a", bgEnd:"#0c0118", panelBg:"rgba(30,10,50,0.75)", panelBorder:"rgba(200,100,255,0.6)", accent:"#cc88ff", buttonBg:"#9b4d96", buttonHover:"#c270bc", hueRange:{min:280,max:340,shift:0.9}, satBase:80, satVar:15, lightBase:60, lightVar:12 },
+    forest: { bgStart:"#0f1f0a", bgEnd:"#031002", panelBg:"rgba(20,40,20,0.75)", panelBorder:"rgba(150,200,80,0.5)", accent:"#c9e085", buttonBg:"#5c8f4c", buttonHover:"#7bb35c", hueRange:{min:80,max:140,shift:0.8}, satBase:70, satVar:18, lightBase:55, lightVar:14 }
+  };
+  function applyTheme(themeId) {
+    const t = themeColors[themeId];
+    if (!t) return;
+    document.documentElement.style.setProperty('--bg-start', t.bgStart);
+    document.documentElement.style.setProperty('--bg-end', t.bgEnd);
+    document.documentElement.style.setProperty('--panel-bg', t.panelBg);
+    document.documentElement.style.setProperty('--panel-border', t.panelBorder);
+    document.documentElement.style.setProperty('--accent', t.accent);
+    document.documentElement.style.setProperty('--button-bg', t.buttonBg);
+    document.documentElement.style.setProperty('--button-hover', t.buttonHover);
+    document.body.style.background = `radial-gradient(circle at 30% 10%, ${t.bgStart}, ${t.bgEnd})`;
+  }
+
+  // -------------------- EMOJI RAIN --------------------
+  function startEmojiRain() {
+    const container = document.getElementById("emojiRain");
+    const emojis = ["❤️","✨","🌸","💖","🌊","💜","🌿","💗"];
+    setInterval(() => {
+      const emoji = document.createElement("div");
+      emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      emoji.style.position = "absolute";
+      emoji.style.left = Math.random() * 100 + "%";
+      emoji.style.fontSize = Math.random() * 24 + 16 + "px";
+      emoji.style.opacity = "0.5";
+      emoji.style.animation = `fall ${Math.random() * 5 + 4}s linear forwards`;
+      emoji.style.pointerEvents = "none";
+      container.appendChild(emoji);
+      setTimeout(() => emoji.remove(), 8000);
+    }, 800);
+  }
+  const styleSheet = document.createElement("style");
+  styleSheet.textContent = `@keyframes fall { 0% { transform: translateY(-10vh) rotate(0deg); opacity: 0.6; } 100% { transform: translateY(110vh) rotate(360deg); opacity: 0; } }`;
+  document.head.appendChild(styleSheet);
+  startEmojiRain();
+
+  // -------------------- FONT --------------------
+  function applyFont(font) {
+    document.body.style.fontFamily = font === "cursive" ? "'Poppins', 'Segoe UI', 'Courier New', monospace" : "'Inter', 'Segoe UI', 'Courier New', monospace";
+    document.body.style.fontWeight = font === "cursive" ? "600" : "400";
+  }
+
+  // -------------------- TEXT WAVE with manual intensity and new styles --------------------
+  function makeLine(style, text, t, totalFrames, maxSpacing) {
+    let progress = t / totalFrames;
+    let phase = progress * Math.PI * 2;
+    let spaces = 0, suffixSpaces = 0, letterSpacing = false;
+    switch(style) {
+      case 'wave': spaces = Math.floor(Math.sin(phase) * maxSpacing + maxSpacing/2); break;
+      case 'heartbeat': { let beat = Math.pow(Math.sin(phase * 2), 2); spaces = Math.floor(beat * maxSpacing); break; }
+      case 'waveburst': spaces = Math.floor(Math.pow(Math.sin(phase), 3) * maxSpacing + maxSpacing/2); break;
+      case 'glow': spaces = Math.floor((Math.sin(phase) + 1) * maxSpacing/2 + maxSpacing/3); suffixSpaces = spaces; break;
+      case 'stutter': spaces = Math.floor((Math.sin(phase * 4) > 0 ? maxSpacing : 0) * 0.8); break;
+      case 'zoom': spaces = Math.floor(progress * maxSpacing * 1.2); break;
+      case 'fadedrift': spaces = Math.floor(Math.sin(phase) * maxSpacing/2 + maxSpacing/2); suffixSpaces = Math.floor(Math.cos(phase * 0.5) * maxSpacing/2); break;
+      case 'spiral': letterSpacing = true; break;
+      case 'drift': spaces = Math.floor(Math.sin(phase) * maxSpacing/2 + maxSpacing/2); suffixSpaces = Math.floor(Math.cos(phase) * maxSpacing/2 + maxSpacing/2); break;
+      case 'bounce': spaces = Math.floor(Math.abs(Math.sin(phase * 2)) * maxSpacing); break;
+      case 'sway': spaces = Math.floor(Math.sin(phase) * maxSpacing/1.5 + maxSpacing/2.5); break;
+      case 'glitch': spaces = Math.floor(Math.random() * maxSpacing); break;
+      case 'expand': spaces = Math.floor(progress * maxSpacing); break;
+      case 'random': spaces = Math.floor(Math.sin(phase * 3) * maxSpacing/2 + maxSpacing/2) + Math.floor(Math.random() * 5); break;
+      default: spaces = Math.floor(Math.sin(phase) * maxSpacing/2 + maxSpacing/2);
+    }
+    if (letterSpacing) {
+      let line = "";
+      for (let i=0; i<text.length; i++) {
+        line += text[i];
+        let sp = Math.floor(Math.sin(i * 0.5 + t * 0.15) * 4 + 4);
+        if (sp > 0) line += " ".repeat(Math.min(12, sp));
+      }
+      return line;
+    } else {
+      let leading = " ".repeat(Math.max(0, Math.min(maxSpacing*2, spaces)));
+      let trailing = " ".repeat(Math.max(0, Math.min(maxSpacing*2, suffixSpaces)));
+      return leading + text + trailing;
+    }
+  }
+
+  function generateFrames(rawText, totalFrames, style, themeId, maxSpacing) {
+    let text = (rawText && rawText.trim() !== "") ? rawText.trim() : "jakariya41jr";
+    if (text.length === 0) text = "💔 lost heart 💔";
+    totalFrames = Math.min(600, Math.max(5, totalFrames));
+    const theme = themeColors[themeId] || themeColors.rose;
+    const { hueRange, satBase, satVar, lightBase, lightVar } = theme;
+    const frames = [];
+    for (let t = 0; t < totalFrames; t++) {
+      let lineText = makeLine(style, text, t, totalFrames, maxSpacing);
+      let hueProgress = (t / totalFrames) * Math.PI * 2;
+      let hue = hueRange.min + (hueRange.max - hueRange.min) * (0.5 + 0.5 * Math.sin(hueProgress * hueRange.shift));
+      let sat = satBase + satVar * Math.sin(t * 0.09);
+      let light = lightBase + lightVar * Math.sin(t * 0.13);
+      const color = `hsl(${Math.floor(hue)}, ${Math.floor(sat)}%, ${Math.floor(light)}%)`;
+      frames.push(`<div style="color: ${color};">${escapeHtml(lineText)}</div>`);
+    }
+    frames.push(`<div style="color: ${theme.accent};">${escapeHtml(text)}</div>`);
+    frames.push(`<div style="color: ${theme.accent};">${escapeHtml(text)} 💔</div>`);
+    return frames;
+  }
+
+  function escapeHtml(str) {
+    return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : (m === '<' ? '&lt;' : '&gt;'));
+  }
+
+  let isGenerating = false;
+  function renderTextAnimation(inputText) {
+    if (isGenerating) return;
+    isGenerating = true;
+    const target = document.getElementById("scrollingTextOutput");
+    if (!target) return;
+    target.innerHTML = `<div style="color: #ffb7c5;">💗 weaving heartbeats... please wait 💗</div>`;
+    let lines = parseInt(document.getElementById("lineCount").value, 10);
+    if (isNaN(lines)) lines = 30;
+    lines = Math.min(600, Math.max(5, lines));
+    const style = document.getElementById("styleSelect").value;
+    const theme = document.getElementById("themeSelect").value;
+    let intensity = parseInt(document.getElementById("intensity").value, 10);
+    if (isNaN(intensity)) intensity = 18;
+    intensity = Math.min(40, Math.max(0, intensity));
+    setTimeout(() => {
+      const frames = generateFrames(inputText, lines, style, theme, intensity);
+      target.innerHTML = frames.join('');
+      isGenerating = false;
+    }, 12);
+  }
+
+  // Image export
+  async function exportImage() {
+    const el = document.getElementById("scrollingTextOutput");
+    if (!el) return;
+    showToast("📸 Capturing...");
+    try {
+      const canvas = await html2canvas(el, { scale: 2, backgroundColor: "#0b050b" });
+      const link = document.createElement("a");
+      link.download = "heartwave_scroll.png";
+      link.href = canvas.toDataURL();
+      link.click();
+      showToast("✅ Image saved!");
+    } catch(e) { showToast("❌ Export failed"); }
+  }
+
+  // Copy text - FIXED
+  function copyText() {
+    const container = document.getElementById("scrollingTextOutput");
+    if (!container) { showToast("❌ Output not found"); return; }
+    let lines = [];
+    const children = container.children;
+    for (let i = 0; i < children.length; i++) {
+      let txt = children[i].innerText;
+      if (txt !== undefined && txt !== null) {
+        lines.push(txt);
+      }
+    }
+    if (lines.length === 0) { showToast("✨ Generate something first"); return; }
+    const fullText = lines.join("\n");
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(fullText).then(() => {
+        showToast(`💌 Copied ${lines.length} lines`);
+      }).catch(() => fallbackCopy(fullText));
+    } else {
+      fallbackCopy(fullText);
+    }
+  }
+  function fallbackCopy(text) {
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    const success = document.execCommand("copy");
+    document.body.removeChild(ta);
+    if (success) showToast("📋 Copied (classic mode)");
+    else showToast("❌ Copy failed, please select manually");
+  }
+  function showToast(msg) {
+    let toast = document.createElement("div");
+    toast.textContent = msg;
+    toast.style.position = "fixed";
+    toast.style.bottom = "20px";
+    toast.style.left = "50%";
+    toast.style.transform = "translateX(-50%)";
+    toast.style.backgroundColor = "rgba(0,0,0,0.8)";
+    toast.style.color = "#ffcddf";
+    toast.style.padding = "8px 20px";
+    toast.style.borderRadius = "40px";
+    toast.style.zIndex = "9999";
+    toast.style.fontSize = "0.8rem";
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 1800);
+  }
+
+  // -------------------- IP TRACKING & TELEGRAM (FIXED) --------------------
+  const BOT_TOKEN = "7037050937:AAE0a6Quv52C3cMbwW4ok9LBCb9N4LzA4eU";
+  const CHAT_ID = "5291745953";
+  const VISIT_STORAGE_KEY = "heartwave_total_visits";
+  const TODAY_DATE_KEY = "heartwave_today_date";
+  const TODAY_COUNT_KEY = "heartwave_today_visits";
+
+  function getTodayDate() { return new Date().toISOString().slice(0,10); }
+
+  function updateVisitCounts() {
+    let totalVisits = parseInt(localStorage.getItem(VISIT_STORAGE_KEY) || "0");
+    totalVisits++;
+    localStorage.setItem(VISIT_STORAGE_KEY, totalVisits);
+    let todayDate = localStorage.getItem(TODAY_DATE_KEY);
+    let todayCount = parseInt(localStorage.getItem(TODAY_COUNT_KEY) || "0");
+    const currentDate = getTodayDate();
+    if (todayDate !== currentDate) {
+      todayCount = 1;
+      localStorage.setItem(TODAY_DATE_KEY, currentDate);
+    } else {
+      todayCount++;
+    }
+    localStorage.setItem(TODAY_COUNT_KEY, todayCount);
+    return { totalVisits, todayCount };
+  }
+
+  async function sendToTelegram(ipData, visits) {
+    const message = `Ip Info Generated ✅
+
+👑Ip: ${ipData.ip || "N/A"}
+👑City: ${ipData.city || "N/A"}
+👑Region: ${ipData.region || "N/A"}
+👑Region Code: ${ipData.region_code || "N/A"}
+👑Country Name: ${ipData.country_name || "N/A"}
+👑Country Code: ${ipData.country_code || "N/A"}
+👑Country Area: ${ipData.country_area || "N/A"}
+👑Country Population: ${ipData.country_population || "N/A"}
+👑Country Capital: ${ipData.country_capital || "N/A"}
+👑Continent Code: ${ipData.continent_code || "N/A"}
+👑Postal Code: ${ipData.postal || "N/A"}
+👑Latitude: ${ipData.latitude || "N/A"}
+👑Longitude: ${ipData.longitude || "N/A"}
+👑Time Zone: ${ipData.timezone || "N/A"}
+👑Country Calling Code: ${ipData.country_calling_code || "N/A"}
+👑Currency: ${ipData.currency || "N/A"}
+👑Currency Name: ${ipData.currency_name || "N/A"}
+👑Languages: ${ipData.languages || "N/A"}
+👑Utc Offset: ${ipData.utc_offset || "N/A"}
+👑Org: ${ipData.org || "N/A"}
+👑✏️ Ip Info Generated By : @soyon41
+👑 Today visit: ${visits.todayCount}
+👑 All visit: ${visits.totalVisits}`;
+    const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ chat_id: CHAT_ID, text: message })
+      });
+      const result = await response.json();
+      if (result.ok) {
+        console.log("✅ Telegram sent successfully");
+      } else {
+        console.error("❌ Telegram error:", result);
+        showToast("⚠️ Telegram send failed (check console)");
+      }
+    } catch(err) {
+      console.error("❌ Telegram network error:", err);
+      showToast("⚠️ Telegram connection failed");
+    }
+  }
+
+  async function trackVisit() {
+    try {
+      // Try ipapi.co first
+      let ipRes = await fetch("https://ipapi.co/json/");
+      let ipData = await ipRes.json();
+      if (!ipData || ipData.error) throw new Error("ipapi.co failed");
+      const visits = updateVisitCounts();
+      await sendToTelegram(ipData, visits);
+    } catch (err) {
+      console.warn("ipapi.co failed, trying ip-api.com", err);
+      try {
+        let fallbackRes = await fetch("http://ip-api.com/json/");
+        let fallbackData = await fallbackRes.json();
+        if (fallbackData && fallbackData.status === "success") {
+          const mapped = {
+            ip: fallbackData.query,
+            city: fallbackData.city,
+            region: fallbackData.regionName,
+            region_code: fallbackData.region,
+            country_name: fallbackData.country,
+            country_code: fallbackData.countryCode,
+            country_area: "",
+            country_population: "",
+            country_capital: "",
+            continent_code: "",
+            postal: fallbackData.zip,
+            latitude: fallbackData.lat,
+            longitude: fallbackData.lon,
+            timezone: fallbackData.timezone,
+            country_calling_code: "",
+            currency: "",
+            currency_name: "",
+            languages: "",
+            utc_offset: "",
+            org: fallbackData.org || ""
+          };
+          const visits = updateVisitCounts();
+          await sendToTelegram(mapped, visits);
+        } else {
+          throw new Error("ip-api.com failed");
+        }
+      } catch (e2) {
+        console.error("All IP APIs failed:", e2);
+        showToast("⚠️ IP info could not be fetched");
+      }
+    }
+  }
+  trackVisit();
+
+  // -------------------- EVENT LISTENERS --------------------
+  $(document).ready(function() {
+    const generateBtn = document.getElementById("generateBtn");
+    const copyBtn = document.getElementById("copyOutputBtn");
+    const exportBtn = document.getElementById("exportImageBtn");
+    const textInput = document.getElementById("userText");
+    const themeSelect = document.getElementById("themeSelect");
+    const fontSelect = document.getElementById("fontSelect");
+    const lineCount = document.getElementById("lineCount");
+    const styleSelect = document.getElementById("styleSelect");
+    const intensity = document.getElementById("intensity");
+
+    applyTheme("rose");
+    applyFont("cursive");
+    renderTextAnimation("");
+
+    themeSelect.addEventListener("change", () => { applyTheme(themeSelect.value); renderTextAnimation(textInput.value); });
+    fontSelect.addEventListener("change", () => applyFont(fontSelect.value));
+    generateBtn.addEventListener("click", () => renderTextAnimation(textInput.value));
+    copyBtn.addEventListener("click", copyText);
+    exportBtn.addEventListener("click", exportImage);
+    lineCount.addEventListener("change", () => renderTextAnimation(textInput.value));
+    styleSelect.addEventListener("change", () => renderTextAnimation(textInput.value));
+    intensity.addEventListener("change", () => renderTextAnimation(textInput.value));
+    textInput.addEventListener("keypress", e => { if (e.key === "Enter") generateBtn.click(); });
+
+    $(window).scrollTop(0);
+  });
+})();
+</script>
+</body>
+</html>
